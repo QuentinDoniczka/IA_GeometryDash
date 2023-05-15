@@ -1,0 +1,49 @@
+{
+  "Score": 15.166696,
+  "Neurones": [
+    {
+      "Detectors": [
+        {
+          "Type": 5,
+          "PositionAbso": "175, -210"
+        },
+        {
+          "Type": 2,
+          "PositionAbso": "140, -140"
+        },
+        {
+          "Type": 2,
+          "PositionAbso": "280, -55"
+        }
+      ]
+    },
+    {
+      "Detectors": [
+        {
+          "Type": 0,
+          "PositionAbso": "175, -40"
+        }
+      ]
+    },
+    {
+      "Detectors": [
+        {
+          "Type": 3,
+          "PositionAbso": "-20, -200"
+        },
+        {
+          "Type": 1,
+          "PositionAbso": "185, -20"
+        }
+      ]
+    },
+    {
+      "Detectors": [
+        {
+          "Type": 0,
+          "PositionAbso": "180, -150"
+        }
+      ]
+    }
+  ]
+}
