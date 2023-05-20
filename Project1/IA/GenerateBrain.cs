@@ -56,12 +56,11 @@ namespace Project1.IA
             // Maintenant, nous devons adapter notre nombre aléatoire à notre plage souhaitée, qui est de 0 à 9.
             int nNeurone = (int)(randDouble * 6) + 3; // 10 parce que nous avons besoin d'une plage de 0 à 9.
             int nDetector;
-
             for (int i = 0; i < nNeurone; i++)
             {
                 Neurone newNeurone = new Neurone(playerPosition, neuroneTexture);
                 randDouble = Math.Pow(rand.NextDouble(), bias);
-                nDetector = (int)(randDouble * 4) + 1; // 10 parce que nous avons besoin d'une plage de 0 à 9.
+                nDetector = (int)(randDouble * 4) + 1;
                 for (int j = 0; j < nDetector; j++)
                 {
                     RandomDetector(newNeurone);
@@ -106,12 +105,61 @@ namespace Project1.IA
         {
             // Effacer la liste des neurones actuels
             _neurones.Clear();
-
-            // Créer une copie profonde de chaque neurone dans _bestNeurones et l'ajouter à _neurones
             foreach (Neurone bestNeurone in _bestNeurones)
             {
                 _neurones.Add(bestNeurone.Copy());
             }
+            double bias = 2.0; // Augmentez cette valeur pour rendre les nombres plus grands encore plus rares.
+            double randDouble = Math.Pow(rand.NextDouble(), bias);
+            int nModif = (int)(randDouble * 19) + 1; // 10 parce que nous avons besoin d'une plage de 0 à 9.
+            Random random = new Random();
+            for (int i = 0; i < nModif; i++)
+            {
+                int randomNum = random.Next(0, 3);
+                switch (randomNum) {
+                    case 0:
+                        if (_neurones.Count > 0) // Vérifie qu'il y a des neurones à modifier
+                        {
+                            int randomNeuronIndex = random.Next(0, _neurones.Count); // Choisit un neurone au hasard
+                            Neurone neuron = _neurones[randomNeuronIndex];
+
+                            if (neuron.GetDetector.Count > 0) // Vérifie qu'il y a des détecteurs à supprimer
+                            {
+                                int randomDetectorIndex = random.Next(0, neuron.GetDetector.Count); // Choisit un détecteur au hasard
+                                neuron.GetDetector.RemoveAt(randomDetectorIndex); // Supprime le détecteur
+
+                                if (neuron.GetDetector.Count == 0) // Si le neurone n'a plus de détecteurs
+                                {
+                                    _neurones.RemoveAt(randomNeuronIndex); // Supprime le neurone
+                                }
+                            }
+                        }
+                        break;
+                    case 1:
+                        if (_neurones.Count > 0) // Vérifie qu'il y a des neurones à modifier
+                        {
+                            int randomNeuronIndex = random.Next(0, _neurones.Count); // Choisit un neurone au hasard
+                            Neurone neuron = _neurones[randomNeuronIndex];
+
+                            // Ajoute un nouveau détecteur au neurone
+                            RandomDetector(neuron);
+                        }
+                        break;
+                    case 2:
+                        Neurone newNeurone = new Neurone(playerPosition, neuroneTexture);
+                        randDouble = Math.Pow(rand.NextDouble(), bias);
+                        int nDetector = (int)(randDouble * 4) + 1;
+                        for (int j = 0; j < nDetector; j++)
+                        {
+                            RandomDetector(newNeurone);
+                        }
+                        _neurones.Add(newNeurone);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
         public List<Neurone> GetNeurones()
         {
@@ -119,4 +167,24 @@ namespace Project1.IA
         }
     }
 }
+/*
+            Neurone newNeurone;
+            newNeurone = new Neurone(playerPosition, neuroneTexture);
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 50, detectorY + 50), detectorTexture, Detector.DetectorType.Pick));
+            _neurones.Add(newNeurone);
+            newNeurone = new Neurone(playerPosition, neuroneTexture);
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 75, detectorY + 0), detectorTexture, Detector.DetectorType.Pick));
+            _neurones.Add(newNeurone);
+            newNeurone = new Neurone(playerPosition, neuroneTexture);
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 100, detectorY + 0), detectorTexture, Detector.DetectorType.Block));
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 0, detectorY - 50), detectorTexture, Detector.DetectorType.NonPick));
+            _neurones.Add(newNeurone);
+            newNeurone = new Neurone(playerPosition, neuroneTexture);
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 100, detectorY + 50), detectorTexture, Detector.DetectorType.Empty));
+            _neurones.Add(newNeurone);
+
+            newNeurone = new Neurone(playerPosition, neuroneTexture);
+            newNeurone.AddDetector(new Detector(playerPosition, new Vector2(detectorX + 200, detectorY + 0), detectorTexture, Detector.DetectorType.Block));
+            _neurones.Add(newNeurone);
+            */
 

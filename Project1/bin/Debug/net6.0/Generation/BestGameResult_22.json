@@ -1,16 +1,8 @@
 {
-  "Score": 155.8336,
+  "Score": 173.66748,
   "Neurones": [
     {
       "Detectors": [
-        {
-          "Type": 3,
-          "PositionAbso": "25, -125"
-        },
-        {
-          "Type": 4,
-          "PositionAbso": "110, 25"
-        },
         {
           "Type": 4,
           "PositionAbso": "75, -30"
@@ -18,15 +10,19 @@
         {
           "Type": 3,
           "PositionAbso": "170, -70"
+        },
+        {
+          "Type": 1,
+          "PositionAbso": "305, -25"
+        },
+        {
+          "Type": 1,
+          "PositionAbso": "295, -20"
         }
       ]
     },
     {
       "Detectors": [
-        {
-          "Type": 1,
-          "PositionAbso": "95, 90"
-        },
         {
           "Type": 5,
           "PositionAbso": "5, 105"
@@ -40,32 +36,40 @@
     {
       "Detectors": [
         {
-          "Type": 3,
-          "PositionAbso": "120, -80"
-        },
-        {
           "Type": 0,
           "PositionAbso": "200, -45"
         },
         {
-          "Type": 5,
-          "PositionAbso": "245, -135"
-        },
-        {
-          "Type": 1,
-          "PositionAbso": "105, -115"
-        },
-        {
-          "Type": 5,
-          "PositionAbso": "10, -85"
-        },
-        {
           "Type": 1,
           "PositionAbso": "10, -95"
+        }
+      ]
+    },
+    {
+      "Detectors": [
+        {
+          "Type": 2,
+          "PositionAbso": "5, 10"
+        }
+      ]
+    },
+    {
+      "Detectors": [
+        {
+          "Type": 1,
+          "PositionAbso": "220, -200"
         },
         {
-          "Type": 5,
-          "PositionAbso": "240, -85"
+          "Type": 1,
+          "PositionAbso": "50, -160"
+        },
+        {
+          "Type": 4,
+          "PositionAbso": "145, 30"
+        },
+        {
+          "Type": 1,
+          "PositionAbso": "265, 20"
         }
       ]
     }

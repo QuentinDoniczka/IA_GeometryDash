@@ -16,48 +16,59 @@ namespace Project1
 {
     public class Game1 : Game
     {
+        // Stopwatch
         Stopwatch stopwatch = new Stopwatch();
 
+        // Game Settings
+        private const float PlayerSpeed = 500f;
+        private const float Gravity = 5000f;
+        private const float JumpSpeed = 1300f;
+        private const int playerX = 325;
+        private const int playerY = 175;
+        private float _updateInterval = 60f;
+        private int _updateMultiplier = 1;
+
+        // Game State
+        private bool _isPlayerOnGround = true;
+        private bool _isGameStarted = false;
+
+        private bool _isTrainingMode = false;
+
+        private bool _isPlayerFrozen = false;
+        private int nombreGame = 0;
+        private int Generation = 0;
+        private int maxGeneration = 30;
+        private int nGamePerGeneration = 1000;
+
+        // Game Time
+        private float _elapsedTime = 0f;
+        private float gamepause = 0f;
+        private float _elapsedUpdateTime = 0f;
+        private float _freezeTime = 0f;
+
+        // Game Score
+        private float _score;
+
+        // Game Elements
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Player _player;
         private List<Block> _blocks;
         private Camera2D _camera;
-        private const float PlayerSpeed = 500f;
-        private const float Gravity = 5000f;
-        private bool _isPlayerOnGround = true;
-        private const float JumpSpeed = 1300f;
-        private float _score;
         private SpriteFont _font;
-        private bool _isGameStarted = false;
-        private float _elapsedTime = 0f;
         private List<Pick> _pick;
-        private float gamepause = 0f;
-        private float _elapsedUpdateTime = 0f;
 
-        private float _updateInterval = 60f;
-        private int _updateMultiplier = 1; // Nombre de fois que vous voulez appeler Update par rapport à la vitesse normale
-
-        private bool _isTrainingMode = true;
-        
+        // AI Elements
         private List<Neurone> _neurones;
         private GenerateBrain _generateBrain;
-        private const int playerX = 325;
-        private const int playerY = 125;
-
         private List<GameResult> _gameResults = new List<GameResult>();
-        private int nombreGame = 0;
-        private int Generation = 0;
-        private int maxGeneration = 10;
-        private int nGamePerGeneration = 100;
-        // Ajouter un booléen pour vérifier si le joueur est gelé
-        private bool _isPlayerFrozen = false;
-        private float _freezeTime = 0f;
         GenerationResult generationResult;
 
 
         public Game1()
         {
+            // afficher la souris
+            this.IsMouseVisible = true;
             stopwatch.Start();
             if (_isTrainingMode)
             {
@@ -129,15 +140,12 @@ namespace Project1
             }
             else
             {
-                string jsonPath = Path.Combine("Generation", $"BestGameResult_{Generation}.json");
+                string jsonPath = Path.Combine("Generation", $"BestGameResult_{maxGeneration}.json");
                 string json = File.ReadAllText(jsonPath);
 
                 GameResult gameResultFromJson = JsonConvert.DeserializeObject<GameResult>(json);
 
                 _neurones = new List<Neurone>();
-                Debug.WriteLine(gameResultFromJson.Neurones.Count); // repond 7
-                Debug.WriteLine(gameResultFromJson.Score); // repond 92,999954
-                Debug.WriteLine(gameResultFromJson.Neurones[0].Detectors.Count); // repond 0 DONC erreur
 
                 foreach (SimpleNeurone simpleNeurone in gameResultFromJson.Neurones)
                 {
@@ -480,68 +488,71 @@ namespace Project1
                 System.Threading.Thread.Sleep(2000);
                 Environment.Exit(0);
             }
-            nombreGame++;
-            _gameResults.Add(new GameResult(_generateBrain.GetNeurones(), _score));
+            else { 
+                nombreGame++;
+                _gameResults.Add(new GameResult(_generateBrain.GetNeurones(), _score));
 
-            // Créer une nouvelle génération avec l'ID et les résultats de la partie
-            if (nombreGame > nGamePerGeneration)
-            {
-                generationResult = new GenerationResult(Generation, _gameResults);
-                string directoryName = "Generation";
-                string json = JsonConvert.SerializeObject(generationResult.BestGameResult, Formatting.Indented);
-
-                if (!Directory.Exists(directoryName))
+                // Créer une nouvelle génération avec l'ID et les résultats de la partie
+                if (nombreGame > nGamePerGeneration)
                 {
-                    Directory.CreateDirectory(directoryName);
+                    generationResult = new GenerationResult(Generation, _gameResults);
+                    string directoryName = "Generation";
+                    string json = JsonConvert.SerializeObject(generationResult.BestGameResult, Formatting.Indented);
+
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    File.WriteAllText(Path.Combine(directoryName, $"BestGameResult_{Generation}.json"), json);
+                    Generation++;
+                    nombreGame = 0;
+                    _gameResults.Clear();
                 }
-                File.WriteAllText(Path.Combine(directoryName, $"BestGameResult_{Generation}.json"), json);
-                Generation++;
-                nombreGame = 0;
-                _gameResults.Clear();
-            }
-            if (Generation > maxGeneration)
-            {
-                stopwatch.Stop();
-                Debug.WriteLine($"Temps écoulé: {stopwatch.ElapsedMilliseconds} ms");
-                Environment.Exit(0);
-            }
-            _isPlayerFrozen = false;
-            _freezeTime = 0f;
-            _score = 0f;
-            _elapsedTime = 0f;
-            _isGameStarted = false;
-            _player.Position = new Vector2(325, 125);
-            _player.Velocity = Vector2.Zero;
-            _player.Rotation = 0f; // Ajouter cette ligne pour réinitialiser la rotation du joueur
-
-            // Créer un nouveau cerveau
-            if (Generation == 0)
-            {
-                _generateBrain.RegenerateBrain();
-            }else
-            {
-                if (nombreGame == 0)
+                if (Generation > maxGeneration)
                 {
-                    _generateBrain.FirstBrain(generationResult);
+                    stopwatch.Stop();
+                    Debug.WriteLine($"Temps écoulé: {stopwatch.ElapsedMilliseconds} ms");
+                    Environment.Exit(0);
+                }
+                _isPlayerFrozen = false;
+                _freezeTime = 0f;
+                _score = 0f;
+                _elapsedTime = 0f;
+                _isGameStarted = false;
+                _player.Position = new Vector2(325, 125);
+                _player.Velocity = Vector2.Zero;
+                _player.Rotation = 0f; // Ajouter cette ligne pour réinitialiser la rotation du joueur
+
+                // Créer un nouveau cerveau
+                if (Generation == 0)
+                {
+                    _generateBrain.RegenerateBrain();
                 }
                 else
                 {
-                    _generateBrain.BrainFromFirst();
+                    if (nombreGame == 0)
+                    {
+                        _generateBrain.FirstBrain(generationResult);
+                    }
+                    else
+                    {
+                        _generateBrain.BrainFromFirst();
+                    }
                 }
-            }
-            foreach (Neurone neurone in _neurones)
-            {
-                foreach (Detector detector in neurone.GetDetector)
+                foreach (Neurone neurone in _neurones)
                 {
-                    detector.Position = new Vector2(_player.Position.X + detector.PositionAbso.X, _player.Position.Y + detector.PositionAbso.Y);
+                    foreach (Detector detector in neurone.GetDetector)
+                    {
+                        detector.Position = new Vector2(_player.Position.X + detector.PositionAbso.X, _player.Position.Y + detector.PositionAbso.Y);
+                    }
+                    neurone.Position = new Vector2(_player.Position.X + neurone.PositionAbso.X, _player.Position.Y + neurone.PositionAbso.Y);
                 }
-                neurone.Position = new Vector2(_player.Position.X + neurone.PositionAbso.X, _player.Position.Y + neurone.PositionAbso.Y);
+                _camera.SetPosition(Vector2.Zero);
+                float initialCameraOffsetX = 600f;
+                float initialCameraOffsetY = 150f;
+                _camera.Move(new Vector2(1, 0), initialCameraOffsetX);
+                _camera.Move(new Vector2(0, -1), initialCameraOffsetY);
             }
-            _camera.SetPosition(Vector2.Zero);
-            float initialCameraOffsetX = 600f;
-            float initialCameraOffsetY = 150f;
-            _camera.Move(new Vector2(1, 0), initialCameraOffsetX);
-            _camera.Move(new Vector2(0, -1), initialCameraOffsetY);
         }
 
         // La méthode Draw est appelée à chaque frame pour dessiner les éléments du jeu à l'écran
