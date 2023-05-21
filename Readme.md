@@ -18,6 +18,8 @@ Bien que le projet soit déjà fonctionnel, il reste encore plusieurs aspects à am
 
 4. **Amélioration continue de l'IA :** L'IA pourrait bénéficier d'améliorations supplémentaires et de tests supplémentaires pour améliorer la jouabilité et le réalisme du jeu.
 
+5. **Répartition des Classes et Modularité :** La classe principale actuelle est assez volumineuse, avec plus de 500 lignes de code. Certaines de ses méthodes, comme 'update', pourraient être déplacées vers des classes distinctes. De plus, les variables d'environnement, actuellement trop nombreuses dans la classe principale, pourraient être réparties de manière plus efficace.
+
 ## Utilisation Future
 
 À l'avenir, cette IA pourrait être utilisée pour des applications comme le développement de niveaux, en testant si un niveau est finissable avant de le rendre disponible pour les joueurs.
